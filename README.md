@@ -3,12 +3,12 @@
 This project is for testing multiple temperature sensors with the ESP8266. Current sensurs used are:
 
 1. BMP180
-⋅⋅* temperature, pressure
+  * temperature, pressure
 2. DHT22
---* temperature, humidity
+  * temperature, humidity
 3. Si7005
---* temperature, humidity
+  * temperature, humidity
 4. DS18B20
---* temperature
+  * temperature
 
 Using NodeMCU lua firmware on Adafruit HUZZAH ESP8266 breakout board.
