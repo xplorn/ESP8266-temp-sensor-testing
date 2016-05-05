@@ -3,21 +3,23 @@ gpio4 = 1
 gpio5 = 2
 sda = gpio5
 scl = gpio4
-tempF = 0
-tempC = 0
-p = 0
-t_dht = 0
-h_dht = 0
 
+tBMP180 = 0
+pBMP180 = 0
+tDHT22 = 0
+tDHT22F = 0
+tDHT22F_dec = 0
+hDHT22 = 0
+tDS18B20 = 0
 
 function ReadBMP()
     bmp085 = require("bmp085")
     bmp085.init(sda, scl)
-    t = bmp085.getUT(true)
-    p = bmp085.getUP(true)
-    tempF = (t*9/50+32)
-    print("Temp BMP180: "..tempF.." deg F")
-    print("Pres BMP180: "..p.."hPa")
+    tBMP180 = bmp085.getUT(true)
+    pBMP180 = bmp085.getUP(true)
+    BMP180tempF = (tBMP180*9/50+32)
+    print("BMP180 Temperature: "..BMP180tempF.." deg F")
+    print("BMP180 Pressure: "..pBMP180.."hPa")
     print(" ")
     bmp085 = nil
     package.loaded["bmp085"]=nil
@@ -26,16 +28,16 @@ end
 function ReadDHT()
     dht22 = require("dht22_min")
     dht22.read(gpio2)
-    t_dht = dht22.getTemperature()
-    h_dht = dht22.getHumidity()
-    if h_dht == nil then
+    tDHT22 = dht22.getTemperature()
+    hDHT22 = dht22.getHumidity()
+    if hDHT22 == nil then
         print("Error reading from DHT22")
     else
-        t_dhtF = (9 * t_dht / 50 + 32)
-        t_dhtF_dec = (9 * t_dht / 5 % 10)
-        print("Temp DHT22: "..t_dhtF.."."..t_dhtF_dec.." deg F")
-        h_dhtpct = ((h_dht - (h_dht % 10)) / 10)
-        print("Humi DHT22: "..h_dhtpct.."%")
+        tDHT22F = (9 * tDHT22 / 50 + 32)
+        tDHT22F_dec = (9 * tDHT22 / 5 % 10)
+        print("DHT22 Temperature: "..tDHT22F.."."..tDHT22F_dec.." deg F")
+        hDHT22pct = ((hDHT22 - (hDHT22 % 10)) / 10)
+        print("DHT22 Humidity: "..hDHT22pct.."%")
         print(" ")
     end
     dht22 = nil
@@ -59,8 +61,10 @@ srv:listen(80,function(conn)
         conn:send("    <title>ESP8266 Web Server</title>\n")
         conn:send("  </head>\n")
         conn:send("  <body>\n")
-        conn:send("    <p>Temperature: "..tempF.."</p>\n")
-        conn:send("    <p>Pressure: "..p.."</p>\n")
+        conn:send("    <p>BMP180 Temperature (deg F): "..BMP180tempF.."</p>\n")
+        conn:send("    <p>BMP180 Pressure (hPa): "..pBMP180.."</p>\n")
+        conn:send("    <p>DHT22 Temperature (deg F): "..tDHT22F.."."..tDHT22F_dec.."</p>\n")
+        conn:send("    <p>DHT22 Humidity (%): "..hDHT22pct.."</p>\n")
         conn:send("  </body>\n")
         conn:send("</html>")
     conn:close()

@@ -1,6 +1,6 @@
 print('Huzzah ESP8266 Started')
 
-wifi.sta.setip({ip="192.168.9.201",netmask="255.255.255.0",gateway="192.168.9.1"})
+wifi.sta.setip({ip="192.168.9.205",netmask="255.255.255.0",gateway="192.168.9.1"})
 wifi.setmode(wifi.STATION)
 wifi.sta.config("Monitor2","testing123")
 
