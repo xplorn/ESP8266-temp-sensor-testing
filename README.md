@@ -14,3 +14,5 @@ Current sensors used:
   * temperature
 
 Using NodeMCU lua firmware on Adafruit HUZZAH ESP8266 breakout board.
+
+<img src='schematic.png'>
