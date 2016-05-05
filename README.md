@@ -3,7 +3,7 @@
 This project is for testing multiple temperature sensors with the ESP8266. Current sensurs used are:
 
 - BMP180
---* temperature, pressure
+..* temperature, pressure
 - DHT22
 --* temperature, humidity
 - Si7005
