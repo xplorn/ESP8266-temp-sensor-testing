@@ -1,45 +1,10 @@
-gpio0 = 3
 gpio2 = 4
-gpio4 = 1
-gpio5 = 2
-sda = gpio5
-scl = gpio4
 
-tBMP180 = 0
-pBMP180 = 0
 tDHT22 = 0
 tDHT22F = 0
 tDHT22F_dec = 0
 hDHT22 = 0
 hDHT22pct = 0
-tDS18B20 = 0
-
-
-function ReadDs18b20()
-    t = require("ds18b20")
-    t.setup(gpio0)
-    addrs = t.addrs()
-    tempC=t.read()
-    tDS18B20 = (9 * tempC / 5 + 32)
-    print("DS18B20 Temperature: "..tDS18B20.." F")
-    print(" ")
-    t = nil
-    ds18b20 = nil
-    package.loaded["ds18b20"]=nil
-end
-
-function ReadBMP()
-    bmp085 = require("bmp085")
-    bmp085.init(sda, scl)
-    tBMP180 = bmp085.getUT(true)
-    pBMP180 = bmp085.getUP(true)
-    BMP180tempF = (tBMP180*9/50+32)
-    print("BMP180 Temperature: "..BMP180tempF.." deg F")
-    print("BMP180 Pressure: "..pBMP180.."hPa")
-    print(" ")
-    bmp085 = nil
-    package.loaded["bmp085"]=nil
-end
 
 function ReadDHT()
     dht22 = require("dht22_min")
@@ -61,10 +26,6 @@ function ReadDHT()
     package.loaded["dht22_min"]=nil
 end
 
-
-ReadBMP()
-tmr.alarm(1,5000,1, function()ReadBMP() end)
-tmr.alarm(3,5000,1, function()ReadDs18b20() end)
 tmr.alarm(2,5000,1, function()ReadDHT() end)
 
 
@@ -79,11 +40,8 @@ srv:listen(80,function(conn)
         conn:send("    <title>ESP8266 Web Server</title>\n")
         conn:send("  </head>\n")
         conn:send("  <body>\n")
-        conn:send("    <p>BMP180 Temperature (deg F): "..BMP180tempF.."</p>\n")
-        conn:send("    <p>BMP180 Pressure (hPa): "..pBMP180.."</p>\n")
         conn:send("    <p>DHT22 Temperature (deg F): "..tDHT22F.."."..tDHT22F_dec.."</p>\n")
         conn:send("    <p>DHT22 Humidity (%): "..hDHT22pct.."</p>\n")
-        conn:send("    <p>DS18B20 Temperature (deg F): "..tDS18B20.."</p>\n")
         conn:send("  </body>\n")
         conn:send("</html>")
     conn:close()

@@ -7,8 +7,8 @@ wifi.sta.config("Monitor2","testing123")
 print(wifi.sta.getip())
 
 function startup()
-    dofile('temptest.lua')
---    dofile('i2cscan.lua')
+--    dofile('temptest.lua')
+    dofile('i2cscan.lua')
     end
 
 print("\n2 second startup delay")
